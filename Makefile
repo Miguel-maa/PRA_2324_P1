@@ -11,4 +11,4 @@ bin/testNode: testNode.cpp Node.h
 
 bin/testListLinked: testListLinked.cpp testNode.cpp ListLinked.h Node.h List.h
 	mkdir -p bin
-	g++ -o bin/testListLinked testListLinked.cpp testNode.cpp ListLinked.h Node.h
+	g++ -o bin/testListLinked testListLinked.cpp ListLinked.h
