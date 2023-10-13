@@ -20,13 +20,11 @@ class ListLinked : public List<T> {
     
         ~ListLinked(){  // Método destructor.
         
-            Node<T>* aux = first->next;
+            Node<T>* aux = first->next; // 1. Situar un puntero aux que apunte al nodo first->next.
             while (aux != nullptr){
-                aux = first->next;
-                delete first;
-                first->next = aux->next;
-            
-                aux = aux->next;
+                delete first;           // 2. Liberar la memoria ocupada por el nodo al que apunta first.
+                first->next = aux->next;    // 3. Actualizar first para que apunte a la mismo nodo que aux.
+                aux = first->next;      // 4. Repetir los pasos 1-3 hasta que se alcance el final de la secuencia.
             }        
         }
     
@@ -36,7 +34,7 @@ class ListLinked : public List<T> {
                     
             Node<T>* aux = first;
             int i=0;
-            while (aux != nullptr && i!=pos){
+            while (aux != nullptr && i!=pos){   // Buscamos el elemento situado en la posición pos.
                 i++;
                 aux = aux->next;
             }
@@ -47,12 +45,12 @@ class ListLinked : public List<T> {
         friend std::ostream& operator<<(std::ostream &out, const ListLinked<T> &list){  // Sobr ecarga global del operador << para imprimir una instancia de ListLinked<T> por pantalla.
             out << "List => [";
 
-            if(0 < list.n){
+            if(0 < list.n){ // Comprobamos si existe algun elemento 
                 out << endl;
 
                 Node<T>* aux = list.first;
                 while (aux != nullptr){
-                    out << "  " << aux->data << endl;
+                    out << "  " << aux->data << endl;   // Imprimimos los elementos por pantalla
                     aux = aux->next;
                 }
             } 
@@ -83,7 +81,7 @@ class ListLinked : public List<T> {
                     i++;
                 }
                 
-                prev->next = new Node(e, aux); // Inserta el elemento               
+                prev->next = new Node(e, aux); // Se Inserta el elemento               
             } 
         }
 
@@ -94,7 +92,7 @@ class ListLinked : public List<T> {
             Node<T>* aux = first;
 
             int i = 0;
-            while (aux != nullptr && i < size()){
+            while (aux != nullptr && i < size()){   // Buscamos la última posición 
                 prev = aux;
                 aux = aux->next;
                 i++;
@@ -119,7 +117,7 @@ class ListLinked : public List<T> {
             Node<T>*aux = first;
             int i=0;
 
-            while (aux != nullptr && i != pos){
+            while (aux != nullptr && i != pos){ // Buscamos el nodo de la posición pos.
                 prev = aux;
                 aux = aux->next;
                 i++;
@@ -146,7 +144,7 @@ class ListLinked : public List<T> {
 
             Node<T>* aux = first;
             int i=0;
-            while (aux != nullptr && i!=pos){
+            while (aux != nullptr && i!=pos){   // Buscamos el elemento situado en la posición pos.
                 i++;
                 aux = aux->next;
             }
@@ -157,19 +155,19 @@ class ListLinked : public List<T> {
         int search(T e) override{     // Devuelve la posición en la que se encuentra la primera ocurrencia del elemento e, o -1 si no se encuentra.
     	    Node<T>* aux = first;
             int i = 0;
-            while (aux != nullptr && aux->data != e) {
+            while (aux != nullptr && aux->data != e){  // Busqueda del elemento 
                 aux = aux->next;
                 i++;
             }
             
-            if (aux != nullptr) {
+            if (aux != nullptr) {   // Exito en la busqueda 
                 return i;
-            } else {
+            } else {        // Busqueda fallida 
                 return -1;
             }
         } 
 
-        bool empty() override{        // Indica si la lista está vacía.
+        bool empty() override{      // Indica si la lista está vacía.
             if(n > 0){
                 return false;
             } else {
