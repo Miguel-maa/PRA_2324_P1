@@ -53,11 +53,11 @@ class ListArray : public List<T> {
         friend std::ostream& operator<<(std::ostream &out, const ListArray<T> &list){   // Sobrecarga global del operador << para imprimir una instancia de ListArray<T> por pantalla.
             out << "List => [";
 
-            if(0 < list.max)
+            if(0 < list.max)    // Comprobamos si existe algun elemento 
                 out << endl;
 
             for(int i=0; i < list.max; i++){
-                out << "  " << list.arr[i] << endl;
+                out << "  " << list.arr[i] << endl; // Imprimimos los elementos por pantalla
             } 
 
             out << "]";
@@ -132,7 +132,7 @@ class ListArray : public List<T> {
         int search(T e) override{     // Devuelve la posición en la que se encuentra la primera ocurrencia del elemento e, o -1 si no se encuentra.
     	    int pos;
 
-            for(pos=0; pos < size(); pos++){ 
+            for(pos=0; pos < size(); pos++){ // Busqueda del elemento 
                 if(arr[pos]==e){
                     return pos;
                 } 
@@ -150,7 +150,7 @@ class ListArray : public List<T> {
         } 
 
         int size() override{         // Devuelve el número de elementos de la lista.
-            return max;
+            return n;
         } 
 };
 
