@@ -1,5 +1,8 @@
 #include <ostream>
 #include "List.h"
+#include <iostream>
+
+using namespace std;
 
 template <typename T> 
 class ListArray : public List<T> {
@@ -10,10 +13,10 @@ class ListArray : public List<T> {
         T* arr;     // Puntero al inicio del array que almacenará los elementos de la lista de forma contigua.
         int max;    // Tamaño actual del array.
         int n;      // Número de elementos que contiene la lista.
-        static const int MINSIZE;   // Tamaño mínimo del array.
+        static const int MINSIZE=2;   // Tamaño mínimo del array.
         
         void resize(int new_size){  // Método que se encargará de redimensionar el array al tamaño especificado.
-            T aux = new int[new_size];  // Crear un nuevo array dinámico de new_size elementos
+            T* aux = new int[new_size];  // Crear un nuevo array dinámico de new_size elementos
 
             for(int i=0; i < size(); i++){  // Copiar el contenido del arr (el array actual) en el nuevo array.
                 aux[i] = arr[i];
@@ -31,9 +34,8 @@ class ListArray : public List<T> {
         // miembros públicos, incluidos los heredados de List<T>
        
         ListArray(){    // Método constructor sin argumentos.
-            MINSIZE = 2;
-            max = MINSIZE;
-            arr = new int[MINSIZE];
+            max = 0;
+            arr = new int[0];
             n = 0;
         }
 
@@ -48,33 +50,57 @@ class ListArray : public List<T> {
             return arr[pos];  // Devuelve el elemento situado en la posición pos.
         }            
         
-        friend std::ostream& operator<<(std::ostream &out, const ListArray<T> &list);   // Sobrecarga global del operador << para imprimir una instancia de ListArray<T> por pantalla.
+        friend std::ostream& operator<<(std::ostream &out, const ListArray<T> &list){   // Sobrecarga global del operador << para imprimir una instancia de ListArray<T> por pantalla.
+            out << "List => [";
 
+            if(0 < list.max)
+                out << endl;
+
+            for(int i=0; i < list.max; i++){
+                out << "  " << list.arr[i] << endl;
+            } 
+
+            out << "]";
+
+            return out;
+        }
 
 
 
         // Métodos heredados de la interfaz List<T>
 	    void insert(int pos, T e) override{     // Inserta el elemento e en la posición pos.
-            if (pos < 0 || pos > size()-1)
+            if (pos < 0 || pos > size())
                 throw std::out_of_range("Posición inválida");
 
-            if(arr[pos] == 0)
-                n++;
+            n++;    // Incrementamos el número de elementos que contiene la lista.
+            resize(n);  //  Redimensionar el array
 
-            arr[pos] = e;
+            if(pos < n){   // Desplazamos los elemnetos de array que seán necesarios
+                for(int i=0; i < n-pos; i++){
+                    arr[n - i] = arr[n - 1 - i];
+                }
+            } 
+
+            arr[pos] = e;   // Inserta el elemento e en la posición pos.
         }
 
 	    void append(T e) override{  // Inserta el elemento e al final de la lista.
-            if(arr[max-1] == 0)
-                n++;
+            n++;    // Incrementamos el número de elementos que contiene la lista.
+            
+            resize(n);  //  Redimensionar el array
 
-            arr[max-1] = e;
+            arr[size()-1] = e;
         }
 
 	    void prepend(T e) override{  // Inserta el elemento e al principio de la lista.
-            if(arr[0] == 0)
-                n++;
-
+            n++;    // Incrementamos el número de elementos que contiene la lista.
+            
+            resize(n);  //  Redimensionar el array
+            
+            for(int i=0; i < size(); i++){  // Desplazamos los elemnetos de array que seán necesarios
+                arr[size() - 1 - i] = arr[size() - 2 - i];
+            }
+            
             arr[0] = e;
         }
 
@@ -82,11 +108,16 @@ class ListArray : public List<T> {
     	    if (pos < 0 || pos > size()-1)
                 throw std::out_of_range("Posición inválida");
 
-            if(arr[pos] != 0)
-                n--;
+            int aux = arr[pos];  // Guardamos el elemento situado en la posición pos.
 
-            T aux = arr[pos];  // Devuelve el elemento situado en la posición pos.
-            arr[pos] = 0;   // Elimina el elemento situado en la posición pos.
+            if(pos < n){   // Desplazamos los elemnetos de array que seán necesarios
+                for(int i=pos; i < n; i++){
+                    arr[i] = arr[i + 1];
+                }
+            }
+
+            n--;    // Decrementamos el número de elementos que contiene la lista.
+            resize(n);  //  Redimensionar el array
 
             return aux;
         }
@@ -112,9 +143,9 @@ class ListArray : public List<T> {
 
         bool empty() override{        // Indica si la lista está vacía.
             if(n > 0){
-                return true;
-            } else {
                 return false;
+            } else {
+                return true;
             } 
         } 
 
